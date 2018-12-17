@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,93 +14,84 @@ int main()
     //Seed random number generator with current time
     srand (time(NULL));
 
-    //Create initial list of premier leaue teams + team ratings [teamId][teamRating]
-    //TODO: Can probably use dynamic memorry allocation here to avoid duplicated hardcoding!
-    int numberOfTeamsPremier = 20;
-    int numberOfTeamsChampionship = 24;
+    int testLeague[20][8];
 
-    int teamsPremierLeague[20][2] = {
-        {1,	82},
-        {2, 76},
-        {3, 76},
-        {4, 77},
-        {5, 73},
-        {6, 83},
-        {7, 77},
-        {8, 79},
-        {9, 76},
-        {10, 75},
-        {11, 78},
-        {12, 82},
-        {13, 85},
-        {14, 83},
-        {15, 76},
-        {16, 77},
-        {17, 83},
-        {18, 77},
-        {19, 78},
-        {20, 76}
+    int teamsP = 20;
+
+    int leaguePremier[20][8] = {
+        {1, 95, 0, 0, 0, 0, 0, 1},
+        {2, 75, 0, 0, 0, 0, 0, 1},
+        {3, 70, 0, 0, 0, 0, 0, 1},
+        {4, 70, 0, 0, 0, 0, 0, 1},
+        {5, 70, 0, 0, 0, 0, 0, 1},
+        {6, 70, 0, 0, 0, 0, 0, 1},
+        {7, 70, 0, 0, 0, 0, 0, 1},
+        {8, 70, 0, 0, 0, 0, 0, 1},
+        {9, 70, 0, 0, 0, 0, 0, 1},
+        {10, 70, 0, 0, 0, 0, 0, 1},
+        {11, 70, 0, 0, 0, 0, 0, 1},
+        {12, 70, 0, 0, 0, 0, 0, 1},
+        {13, 70, 0, 0, 0, 0, 0, 1},
+        {14, 70, 0, 0, 0, 0, 0, 1},
+        {15, 70, 0, 0, 0, 0, 0, 1},
+        {16, 70, 0, 0, 0, 0, 0, 1},
+        {17, 70, 0, 0, 0, 0, 0, 1},
+        {18, 70, 0, 0, 0, 0, 0, 1},
+        {19, 70, 0, 0, 0, 0, 0, 1},
+        {20, 50, 0, 0, 0, 0, 0, 1}
     };
 
-    int teamsChampionship[20][2] = {
-        {21, 73},
-        {22, 70},
-        {23, 69},
-        {24, 69},
-        {25, 70},
-        {26, 70},
-        {27, 72},
-        {28, 69},
-        {29, 68},
-        {30, 72},
-        {31, 72},
-        {32, 69},
-        {33, 72},
-        {34, 72},
-        {35, 70},
-        {36, 70},
-        {37, 69},
-        {38, 67},
-        {39, 70},
-        {40, 71},
-        {41, 74},
-        {42, 72},
-        {43, 73},
-        {44, 69}
+    int leagueChampionship[24][8] = {
+        {1, 95, 0, 0, 0, 0, 0, 1},
+        {2, 70, 0, 0, 0, 0, 0, 1},
+        {3, 70, 0, 0, 0, 0, 0, 1},
+        {4, 70, 0, 0, 0, 0, 0, 1},
+        {5, 70, 0, 0, 0, 0, 0, 1},
+        {6, 70, 0, 0, 0, 0, 0, 1},
+        {7, 70, 0, 0, 0, 0, 0, 1},
+        {8, 70, 0, 0, 0, 0, 0, 1},
+        {9, 70, 0, 0, 0, 0, 0, 1},
+        {10, 70, 0, 0, 0, 0, 0, 1},
+        {11, 70, 0, 0, 0, 0, 0, 1},
+        {12, 70, 0, 0, 0, 0, 0, 1},
+        {13, 70, 0, 0, 0, 0, 0, 1},
+        {14, 70, 0, 0, 0, 0, 0, 1},
+        {15, 70, 0, 0, 0, 0, 0, 1},
+        {16, 70, 0, 0, 0, 0, 0, 1},
+        {17, 70, 0, 0, 0, 0, 0, 1},
+        {18, 70, 0, 0, 0, 0, 0, 1},
+        {19, 70, 0, 0, 0, 0, 0, 1},
+        {20, 50, 0, 0, 0, 0, 0, 1},
+        {20, 50, 0, 0, 0, 0, 0, 1},
+        {20, 50, 0, 0, 0, 0, 0, 1},
+        {20, 50, 0, 0, 0, 0, 0, 1},
+        {20, 50, 0, 0, 0, 0, 0, 1}
     };
 
-    //Fire up initial seasons for all leagues
-    int leaguePremier[20][7] = {0};
-    initializeNewSeason(leaguePremier, teamsPremierLeague, numberOfTeamsPremier);
-
-    int leagueChampionship[24][8] = {0};
-    initializeNewSeason(leagueChamptionship, teamsChampionship, numberOfTeamsChampionship);
 
 
+    //int initializeLeague(int *leaguePremier[]);
+    initializeLeague(testLeague);
 
 
     printf("changing it up\n");
     for (int i = 0; i < 20; i++) {
-        for (int j = 0; j < 7; j++) {
-            printf("%i\t", leaguePremier2[i][j]);
+        for (int j = 0; j < 8; j++) {
+            printf("%i\t", testLeague[i][j]);
         }
         printf("\n");
     }
 
-
     for (int season = 1; season <= numberOfSeasons; season++) {
-
-        simulateSeason(leaguePremier);
-        simulateSeason(leagueChampionship);
 
         //Print table headers
         printf("----------------------START SEASON %i----------------------\n", season);
         printf("Team\t Played\t Wins\t Losses\t Draws\t Points\n");
 
         _Bool secondHalf = 0;
-        for (int i = 0; i < numberOfTeamsPremier; i++) {
+        for (int i = 0; i < teamsP; i++) {
 
-            for (int j = 0; j < numberOfTeamsPremier; j++) {
+            for (int j = 0; j < teamsP; j++) {
 
                 if (j > i) {
                     leaguePremier[i][2]++;
@@ -138,7 +130,7 @@ int main()
 
         }
 
-        for (int i = 0; i < numberOfTeamsPremier; i++) {
+        for (int i = 0; i < teamsP; i++) {
             printf("%i\t %i\t %i\t %i\t %i\t %i\n", leaguePremier[i][0], leaguePremier[i][2], leaguePremier[i][3], leaguePremier[i][4], leaguePremier[i][5], leaguePremier[i][6]);
         }
 
@@ -152,19 +144,18 @@ int main()
     return 0;
 }
 
-void initializeNewSeason(int (*league)[7], int (*teams)[2], int numTeams) {
+void initializeLeague(int (*league)[8]) {
 
-    //int numTeams = sizeof(league[0])/sizeof(league[0][0]);
+    int numTeams = sizeof(league)/sizeof(league[0][0]);
     printf("Teams in the league: %i\n", numTeams);
 
     printf("in initialize league\n");
     printf("Did this work?: %i", league[1][1]);
 
     for (int i = 0; i < 20; i++) {
-
-        league[i][0] = teams[i][0];
-        league[i][1] = teams[i][1];
-
+        for (int j = 0; j < 8; j++) {
+            league[i][j] = 100;
+        }
         printf("\n");
     }
 
