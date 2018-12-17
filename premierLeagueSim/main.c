@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+_Bool secondHalf = 0;
+
 int main()
 {
 
@@ -41,7 +43,7 @@ int main()
         {20, 76}
     };
 
-    int teamsChampionship[20][2] = {
+    int teamsChampionship[24][2] = {
         {21, 73},
         {22, 70},
         {23, 69},
@@ -72,16 +74,20 @@ int main()
     int leaguePremier[20][7] = {0};
     initializeNewSeason(leaguePremier, teamsPremierLeague, numberOfTeamsPremier);
 
-    int leagueChampionship[24][8] = {0};
-    initializeNewSeason(leagueChamptionship, teamsChampionship, numberOfTeamsChampionship);
+    int leagueChampionship[24][7] = {0};
+    initializeNewSeason(leagueChampionship, teamsChampionship, numberOfTeamsChampionship);
 
-
-
-
-    printf("changing it up\n");
+    printf("Initial PL:\n");
     for (int i = 0; i < 20; i++) {
         for (int j = 0; j < 7; j++) {
-            printf("%i\t", leaguePremier2[i][j]);
+            printf("%i\t", leaguePremier[i][j]);
+        }
+        printf("\n");
+    }
+    printf("Initial Championship:\n");
+    for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 7; j++) {
+            printf("%i\t", leagueChampionship[i][j]);
         }
         printf("\n");
     }
@@ -89,58 +95,13 @@ int main()
 
     for (int season = 1; season <= numberOfSeasons; season++) {
 
-        simulateSeason(leaguePremier);
-        simulateSeason(leagueChampionship);
-
-        //Print table headers
         printf("----------------------START SEASON %i----------------------\n", season);
-        printf("Team\t Played\t Wins\t Losses\t Draws\t Points\n");
 
-        _Bool secondHalf = 0;
-        for (int i = 0; i < numberOfTeamsPremier; i++) {
+        printf("----------Premier League------------\n");
+        simulateSeason(leaguePremier, numberOfTeamsPremier);
 
-            for (int j = 0; j < numberOfTeamsPremier; j++) {
-
-                if (j > i) {
-                    leaguePremier[i][2]++;
-                    leaguePremier[j][2]++;
-
-                    int winner = determineResult(leaguePremier[i][1], leaguePremier[j][1]);
-
-                    if (winner == 0) {
-                        leaguePremier[i][3]++;
-                        leaguePremier[j][4]++;
-                        leaguePremier[i][6]+=3;
-                    } else if (winner == 1) {
-                        leaguePremier[j][3]++;
-                        leaguePremier[i][4]++;
-                        leaguePremier[j][6]+=3;
-                    } else {
-                        leaguePremier[i][5]++;
-                        leaguePremier[j][5]++;
-                        leaguePremier[i][6]++;
-                        leaguePremier[j][6]++;
-                    }
-
-                    //Debugging
-                    //int winner = determineResult(90, 70);
-
-                    //printf("The winner was team: %i\n", winner);
-
-                }
-
-            }
-
-            if (i == 19 && secondHalf == 0) {
-                i = -1;
-                secondHalf = 1;
-            }
-
-        }
-
-        for (int i = 0; i < numberOfTeamsPremier; i++) {
-            printf("%i\t %i\t %i\t %i\t %i\t %i\n", leaguePremier[i][0], leaguePremier[i][2], leaguePremier[i][3], leaguePremier[i][4], leaguePremier[i][5], leaguePremier[i][6]);
-        }
+        printf("-----------Championship-------------\n");
+        simulateSeason(leagueChampionship, numberOfTeamsChampionship);
 
         //Print table footer
         printf("----------------------END SEASON %i----------------------\n\n", season);
@@ -160,16 +121,81 @@ void initializeNewSeason(int (*league)[7], int (*teams)[2], int numTeams) {
     printf("in initialize league\n");
     printf("Did this work?: %i", league[1][1]);
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < numTeams; i++) {
 
         league[i][0] = teams[i][0];
         league[i][1] = teams[i][1];
 
-        printf("\n");
     }
 
 }
 
+void simulateSeason(int (*league[7]), int numTeams) {
+
+        //Print table headers
+        printf("Team\t Rating\t Played\t Wins\t Losses\t Draws\t Points\n");
+
+        //While in first half of season, false. While in 2nd half, true.
+        //Used for loop control
+        //
+
+        printf("before outer loop");
+        printf("number of teams: %i", numTeams);
+        //Loop over all teams
+        for (int i = 0; i < numTeams; i++) {
+
+            printf("in outer loop");
+
+            for (int j = 0; j < numTeams; j++) {
+
+                printf("in innermost loop");
+
+                //This conditional assures no simulation occurs for a team playing itself
+                //or a team playing a team is has already played (in the current half of the season)
+                //If j > i, then neither of the above are true
+                if (j > i) {
+
+                    //Increment games played count
+                    league[i][2]++;
+                    league[j][2]++;
+
+                    //Determine the outcome of the match
+                    int winner = determineResult(league[i][1], league[j][1]);
+
+                    //Increment win/lose/draw counts, assign points (w = 3, l = 0, draw = 1)
+                    //Could abstract this to new function
+                    if (winner == 0) {
+                        league[i][3]++;
+                        league[j][4]++;
+                        league[i][6]+=3;
+                    } else if (winner == 1) {
+                        league[j][3]++;
+                        league[i][4]++;
+                        league[j][6]+=3;
+                    } else {
+                        league[i][5]++;
+                        league[j][5]++;
+                        league[i][6]++;
+                        league[j][6]++;
+                    }
+                }
+            }
+
+            //Each team plays each other twice.
+            //After each team plays each other once, this will reset the outer array
+            //index to the beginning of the array
+            //The second time through (when secondHalf == true), this is skipped and loop exits
+            if (i == 19 && secondHalf == 0) {
+                i = -1;
+                secondHalf = 1;
+            }
+
+        }
+
+        for (int i = 0; i < numTeams; i++) {
+            printf("%i\t %i\t %i\t %i\t %i\t %i\t %i\n", league[i][0], league[i][1], league[i][2], league[i][3], league[i][4], league[i][5], league[i][6]);
+        }
+}
 
 //Returns 0 for team A win, 1 for team B win, 2 for tie
 //Chances weighted by difference in team's ratings
